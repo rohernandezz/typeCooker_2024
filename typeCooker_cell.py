@@ -11,7 +11,7 @@ from tkColor import *
 
 ###CONFIG===============================================
 demoOn = False
-exampleUNICODE = 0x0061
+saveOn = False
 ###===============================================
 
 defaultFont = 'Asadera-regular'
@@ -136,7 +136,7 @@ def drawTypeCookerCell(textsDict,
     RecetaTXT = textsDict["ES_Receta"]
     recipeByTXT = "RECETA POR :"
 
-    print(language)           
+    # print(language)           
     if language == "EN":
        RecetaTXT = textsDict["EN_Receta"]
        recipeByTXT = "RECIPE BY :"       
@@ -233,4 +233,5 @@ if demoOn:
                        draw=True, debug=True,
                        language='ES'
                        )
-    #saveImage('/Users/Ro/Desktop/TEST.png')        
+    if saveOn:
+        saveImage('~/Desktop/TEST.png')        

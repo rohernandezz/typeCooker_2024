@@ -83,4 +83,4 @@ for altoPost in (1080, 1920):
                            #draw=True,
                            debug=False)
             if saveOn:                       
-                saveImage(f'/Users/Ro/Desktop/TypeCookerImgs/{altoPost}/{i}_{lang}_TypeCooker_{letra}.png')
+                saveImage(f'/~/Desktop/TypeCookerImgs/{altoPost}/{i}_{lang}_TypeCooker_{letra}.png')
