@@ -23,7 +23,7 @@ texts_ejemplo = {
         'D!_Social'   :"",
         'Diseña2'     :'',
         'D2_Social'   :'',
-        'Autorx'      : 'Andrea Buendía',
+        'Autorx'      : 'Adriana Garcidueñas',
         'autorxPaís'  : 'México',
         'autorxSocial':"@AndreaEjemploRedes",
         'ES_Receta'   : "Vamos a canalizar a nuetro Cyrus Highsmith interior. Está será una /g minúscula de doble piso, en una hoja muy grande con una herramienta de trazo grueso/ancho, primero dibujaremos la forma completamente negra y después con corrector blanco vamos a añadir la contraforma. Tiene que ser relativamente ancha (extra puntos si abarca toda la hoja), de alto contraste y con formas coquetas* (*receta en proceso)",
@@ -44,50 +44,61 @@ def addZeroCoord(position, zeroCoord):
 def doText(_text, _font, _fill, position, 
            _tracking=0,
            align='left',
-           textSize=12,
+           FontSize=12,
            xStart=420,
-           zeroCoord=0 ):
+           zeroCoord=0,
+           returnFontSize=False,
+            ):
     
     newPosition = addZeroCoord(position, zeroCoord)
                
     with savedState():
         fillColor(_fill)
-        font(_font, textSize)
+        font(_font, FontSize)
         tracking(_tracking)
-        text(_text,newPosition,align=align)
+        
+        if not returnFontSize:
+            text(_text,newPosition,align=align)
+        
+        if returnFontSize:
+            textWidth, textHeight = textSize(_text)
+            return textWidth, textHeight
 #------------------------------------------
 
 def doTextBox(_text, _font, _fill, _rect, 
               _tracking=0,
               _align='left',
-              textSize=12,
+              FontSize=12,
               zeroCoord= 0 ):
                   
     newRect = (_rect[0], _rect[1]+zeroCoord,_rect[2],_rect[3])
     
     with savedState():
         fillColor(_fill)
-        font(_font, textSize)
+        font(_font, FontSize)
         tracking(_tracking)
-        textBox(_text, newRect,align=_align)
+        txt_overflow = textBox(_text, newRect,align=_align)
+        
+    return txt_overflow
 #------------------------------------------
 
 def doTextMisprint(text, font, fill, position, 
                    align='left',
                    bkFill=tkWhite,
-                   textSize=12,
+                   FontSize=12,
                    _tracking=0,
                    xOffset=(-10,10),
                    yOffset=(-5,15),
                    blending='multiply',
-                   zeroCoord= 0 ):
+                   zeroCoord= 0,
+                   returnFontSize=False,):
                        
     def randRange(a,b):
         return random.uniform(a,b)
     #-----------------------------
     newPosition = addZeroCoord(position, zeroCoord)        
         
-    doText(text, font, bkFill, newPosition, align=align, _tracking=_tracking, textSize=textSize)
+    doText(text, font, bkFill, newPosition, align=align, _tracking=_tracking, FontSize=FontSize,returnFontSize=returnFontSize)
 
     posX, posY = newPosition[0], newPosition[1]
     
@@ -100,9 +111,13 @@ def doTextMisprint(text, font, fill, position,
     
     with savedState():
         blendMode(blending)
-        doText(text, font, fill, offsetPosition, align=align, _tracking=_tracking, textSize=textSize)
+        fontSizeIs = doText(text, font, fill, offsetPosition, align=align, _tracking=_tracking, FontSize=FontSize,returnFontSize=returnFontSize)
+
+    if returnFontSize:
+        return fontSizeIs
     
-    return (xOffset,yOffset)
+    else:
+        return (xOffset,yOffset)
 #------------------------------------------>>>>>    
 
 def drawTypeCookerCell(textsDict, 
@@ -116,10 +131,15 @@ def drawTypeCookerCell(textsDict,
                        debug    = False,
                        zeroCoord= 0):    
     
-    zeroCoord = (altoCell-anchoCell)/2
+    #DIMENSIONES
+    margenGral = 100
+    zeroCoord  = (altoCell-anchoCell)/2
+    ######
     
+    #FUENTES
     defaultFont = 'Asadera-regular'
     font2 = 'Chango-Regular'
+    ########
         
     #==Background===========
     fillColor(bk_Color)
@@ -127,9 +147,10 @@ def drawTypeCookerCell(textsDict,
 
     #==Texts=================
     
-    socialTextSize = 33
-    headTextSize   = 28
-    bodyTextSize   = 28
+    socialFontSize = 33
+    headFontSize   = 28
+    bodyFontSize   = 28
+    FontSizeAUTOR  = 72
 
     #==LANGUAGE SHIT:    
     #if language == 'ES':
@@ -146,12 +167,13 @@ def drawTypeCookerCell(textsDict,
     
        
     #==LETRA:
-    bothCases_letra = f'{textsDict["Letra"].upper()}{textsDict["Letra"].lower()}'
+    currentLetra = textsDict["Letra"]
+    bothCases_letra = f'{currentLetra.upper()}{currentLetra.lower()}'
     #--drawLetra:
     doTextMisprint(bothCases_letra, 
                    font2, colorB, (15, 150),
                    #align='left',
-                   textSize=520,
+                   FontSize=520,
                    xOffset=(-8,10),
                    yOffset=(-10,12),
                    _tracking=-25,
@@ -162,22 +184,39 @@ def drawTypeCookerCell(textsDict,
     
     #--Receta x:
     doText(recipeByTXT, defaultFont, tkWhite, (100,970), 
-           textSize=headTextSize,align='left',zeroCoord=zeroCoord)
+           FontSize=headFontSize,align='left',zeroCoord=zeroCoord)
           
     autorxTXT = textsDict["Autorx"]
    
     if autorxTXT == '':
        autorxTXT = '👉🏼--MISSING--⚠️'   
-       
-    colorA_offset = doTextMisprint(autorxTXT, 
+    #:::AutorxNAME  
+    
+    def doAuthorMisprint(FontSize, returnFontSize=False):
+        
+        return doTextMisprint(autorxTXT, 
                    font2, colorA, (95, 900),
                    #align='left',
-                   textSize=72,
+                   FontSize=FontSize,
                    xOffset=(-2,3),
                    yOffset=(-4,2),
                    blending='multiply',
-                   zeroCoord=zeroCoord
+                   zeroCoord=zeroCoord,
+                   returnFontSize=returnFontSize
                    )
+
+    maxW_Nombre = anchoCell - (2*margenGral)
+    
+    print(maxW_Nombre)
+    autor_W = (doAuthorMisprint(FontSizeAUTOR,returnFontSize=True))[0]
+    print(f'🔗{autor_W}')
+    
+    if autor_W > maxW_Nombre:
+        scaledFontSize = maxW_Nombre * FontSizeAUTOR / autor_W  
+        colorA_offset = doAuthorMisprint(scaledFontSize)
+                
+    else:
+        colorA_offset = doAuthorMisprint(FontSizeAUTOR)
 
     #--AutorSocial    
     autorSocial_String = f'@{textsDict["autorxSocial"].strip("@")}'
@@ -185,16 +224,16 @@ def drawTypeCookerCell(textsDict,
        autorSocial_String = '👉🏼 MISSING' 
        
     doText(autorSocial_String , defaultFont, tkWhite, (100,850),
-          textSize=socialTextSize,zeroCoord=zeroCoord)    
+          FontSize=socialFontSize,zeroCoord=zeroCoord)    
           
     #--AutorPaís
-    doText(f'–{textsDict["autorxPaís"]}', defaultFont, tkBlack, (100,800),
-               textSize=32, zeroCoord=zeroCoord)    
+    doText(f'–{textsDict["autorxPaís"]}', defaultFont, colorA, (100,800),
+               FontSize=32, zeroCoord=zeroCoord)    
 
     #===👠 Footer
     #--Hashtag
     doText(tkGeneralDict['Hashtags'], defaultFont, tkWhite, (941,80),
-           textSize=headTextSize,zeroCoord=zeroCoord, align='right')   
+           FontSize=headFontSize,zeroCoord=zeroCoord, align='right')   
     #--Fecha
     
     colorA_X_offset =(colorA_offset[0],colorA_offset[0])
@@ -203,23 +242,26 @@ def drawTypeCookerCell(textsDict,
     
     doTextMisprint(textsDict["Fecha"] , font2, colorA, (100, 80),
                    xOffset=colorA_X_offset, yOffset=colorA_Y_offset,
-                   textSize=headTextSize*1.15,align='left',zeroCoord=zeroCoord)    
+                   FontSize=headFontSize*1.15,align='left',zeroCoord=zeroCoord)    
 
 #DESCRIPTION:    
-    descriptionBox = [510,330,450,470]
+    descriptionBox = [510,230,450,610]
     descriptionBox[1]+=zeroCoord
-    
-    with savedState():
-        pass
-        #stroke(1,1,1)
-        #fill(None)
-        #rect(*descriptionBox)
+
+    if debug:    
+        with savedState():
+            stroke(1,1,1)
+            fill(None)
+            rect(*descriptionBox)
             
-    doTextBox(RecetaTXT, defaultFont, tkBlack, descriptionBox, textSize=28)
+    txt_overflow = doTextBox(RecetaTXT, defaultFont, tkBlack, descriptionBox, FontSize=28)
+
+    if txt_overflow != '':
+        print(f'⚠️there is a TEXT OVERFLOW in: 👉🏼{currentLetra}👈🏼 \n Overflow:{txt_overflow}')
+
     
     #fontSize(150)
-    #text(txtLetra,(100,900))
-#------------------------------------------>>>
+    #text(txtLetra,(100,900)610------------------------------------------>>>
     
 if demoOn:
     anchoCell= 1080
@@ -230,7 +272,7 @@ if demoOn:
     drawTypeCookerCell(texts_ejemplo,
                        anchoCell= anchoCell,
                        altoCell = altoCell,
-                       draw=True, debug=True,
+                       draw=True, debug=False,
                        language='ES'
                        )
     if saveOn:

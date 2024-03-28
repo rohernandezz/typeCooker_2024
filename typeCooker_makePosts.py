@@ -10,7 +10,7 @@ from typeCooker_cell import *
 
 #######
 debug = False
-saveOn = True
+saveOn = False
 ########
 
 #-Setup:
