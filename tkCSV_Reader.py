@@ -1,6 +1,6 @@
 import csv
 
-csvFile = '/Users/Ro/Desktop/28daysoftypeCooker.csv'
+csvFile = './28daysoftypeCooker.csv'
 
 def csv_to_dict(filename, start_row=4,encoding='utf-8'):
     data_dict = {}
@@ -11,7 +11,7 @@ def csv_to_dict(filename, start_row=4,encoding='utf-8'):
         headers = next(csv_reader)  # Get headers from start_row
         for row in csv_reader:
             key = row[0]  # Assuming the first column is the key
-            data_dict[key] = {headers[i]: row[i] for i in range(0, len(row))}  # Skipping the first column for values
+            data_dict[key] = {headers[i]: row[i] for i in range(0, len(row))}
     return data_dict
 
 
