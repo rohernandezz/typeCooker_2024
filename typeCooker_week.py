@@ -10,7 +10,7 @@ reload(tkColor)
 from tkColor import *
 
 ###CONFIG===============================================
-demoOn = False
+demoOn = True
 saveOn = False
 ###===============================================
 
@@ -182,9 +182,9 @@ def drawTypeCookerCell(textsDict,
                    )
     #==AUTORX:      
     
-    #--Receta x:
-    doText(recipeByTXT, defaultFont, tkWhite, (100,970), 
-           FontSize=headFontSize,align='left',zeroCoord=zeroCoord)
+#    #--Receta x:
+#    doText(recipeByTXT, defaultFont, tkWhite, (100,970), 
+#           FontSize=headFontSize,align='left',zeroCoord=zeroCoord)
           
     autorxTXT = textsDict["Autorx"]
    
@@ -226,9 +226,9 @@ def drawTypeCookerCell(textsDict,
     doText(autorSocial_String , defaultFont, tkWhite, (100,850),
           FontSize=socialFontSize,zeroCoord=zeroCoord)    
           
-    #--AutorPaís
-    doText(f'–{textsDict["autorxPaís"]}', defaultFont, colorA, (100,800),
-               FontSize=32, zeroCoord=zeroCoord)    
+#    #--AutorPaís
+#    doText(f'–{textsDict["autorxPaís"]}', defaultFont, colorA, (100,800),
+#               FontSize=32, zeroCoord=zeroCoord)    
 
     #===👠 Footer
     #--Hashtag
@@ -254,10 +254,10 @@ def drawTypeCookerCell(textsDict,
             fill(None)
             rect(*descriptionBox)
             
-    txt_overflow = doTextBox(RecetaTXT, defaultFont, tkBlack, descriptionBox, FontSize=28)
+    #txt_overflow = doTextBox(RecetaTXT, defaultFont, tkBlack, descriptionBox, FontSize=28)
 
-    if txt_overflow != '':
-        print(f'⚠️there is a TEXT OVERFLOW in: 👉🏼{currentLetra}👈🏼 \n Overflow:{txt_overflow}')
+    #if txt_overflow != '':
+    #    print(f'⚠️there is a TEXT OVERFLOW in: 👉🏼{currentLetra}👈🏼 \n Overflow:{txt_overflow}')
 
     
     #fontSize(150)

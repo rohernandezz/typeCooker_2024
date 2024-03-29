@@ -207,9 +207,9 @@ def drawTypeCookerCell(textsDict,
 
     maxW_Nombre = anchoCell - (2*margenGral)
     
-    print(maxW_Nombre)
+    #print(maxW_Nombre)
     autor_W = (doAuthorMisprint(FontSizeAUTOR,returnFontSize=True))[0]
-    print(f'🔗{autor_W}')
+    #print(f'🔗{autor_W}')
     
     if autor_W > maxW_Nombre:
         scaledFontSize = maxW_Nombre * FontSizeAUTOR / autor_W  
